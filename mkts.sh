@@ -8,22 +8,20 @@ pnpm init
 pnpm add -D typescript
 cat > tsconfig.json <<- EOF
 {
+  "\$schema": "https://www.schemastore.org/tsconfig",
+  "_version": "22.0.0",
+
   "compilerOptions": {
+    "lib": ["es2024", "ESNext.Array", "ESNext.Collection", "ESNext.Iterator"],
     "module": "nodenext",
-    "target": "esnext",
-    "types": [],
-    "sourceMap": true,
-    "declaration": true,
-    "declarationMap": true,
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
+    "target": "es2022",
+
     "strict": true,
-    "jsx": "react-jsx",
-    "verbatimModuleSyntax": true,
-    "isolatedModules": true,
-    "noUncheckedSideEffectImports": true,
-    "moduleDetection": "force",
+    "esModuleInterop": true,
     "skipLibCheck": true,
+    "moduleResolution": "node16",
+
+    "types": ["vitest/globals"]
   }
 }
 EOF
@@ -33,10 +31,12 @@ import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
   test: {
+    globals: true,
     // ... Specify options here.
   },
 })
 EOF
+jq <<< $(jq '.scripts.test = "vitest"' package.json) > package.json
 echo "console.log('Hiya');" >> src/index.ts
 
 
