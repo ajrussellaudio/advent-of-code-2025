@@ -1,12 +1,16 @@
+import { factors } from "../factors";
+
 export function checkIsValid(id: string): boolean {
-  for (let chunkSize = Math.floor(id.length / 2); chunkSize > 0; chunkSize--) {
+  const chunkSizes = factors(id.length).slice(0, -1);
+  for (let chunkSize of chunkSizes) {
     const slices = Array.from({ length: id.length / chunkSize }).map((_, j) => {
       const start = j * chunkSize;
       const end = start + chunkSize;
-      return id.slice(start, end);
+      const sliced = id.slice(start, end);
+      return sliced;
     });
-    const uniqueSlices = Array.from(new Set(slices));
-    if (uniqueSlices.length === 1) {
+    const areAllSlicesIdentical = new Set(slices).size === 1;
+    if (areAllSlicesIdentical) {
       return false;
     }
   }
