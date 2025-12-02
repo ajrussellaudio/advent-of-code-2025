@@ -3,10 +3,16 @@ set -e
 set -u
 set -o pipefail
 
-NAME=$1
-NAME_SNAKE=$(echo $1 | perl -pe 's/(-)./uc($&)/ge;s/-//g')
+FN_PATH=$1 || "."
+NAME=$(basename $FN_PATH)
+NAME_SNAKE=$(echo $NAME | perl -pe 's/(-)./uc($&)/ge;s/-//g')
 
-cat > "src/$NAME.test.ts" <<- EOF
+echo "Creating $FN_PATH"
+mkdir $FN_PATH
+
+TEST_FILE="$FN_PATH/$NAME.test.ts"
+echo "Creating $TEST_FILE"
+cat > "$TEST_FILE" <<- EOF
 import { $NAME_SNAKE } from "./$NAME"
 
 describe('$NAME_SNAKE', () => {
@@ -14,12 +20,19 @@ describe('$NAME_SNAKE', () => {
     expect($NAME_SNAKE()).toBeNull()
   })
 })
-
 EOF
 
-cat > "src/$NAME.ts" <<- EOF
+FN_FILE="$FN_PATH/$NAME.ts"
+echo "Creating $FN_FILE"
+cat > "$FN_FILE" <<- EOF
 export function $NAME_SNAKE() {
   return null;
 }
+EOF
+
+INDEX_FILE="$FN_PATH/index.ts"
+echo "Creating $INDEX_FILE"
+cat > "$INDEX_FILE" <<- EOF
+export { $NAME_SNAKE } from "./$NAME"
 EOF
 
