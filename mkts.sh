@@ -3,6 +3,11 @@ set -e
 set -u
 set -o pipefail
 
+PROJECT_PATH=$1
+
+mkdir $PROJECT_PATH
+cd $PROJECT_PATH
+
 mkdir src
 pnpm init
 pnpm add -D typescript
