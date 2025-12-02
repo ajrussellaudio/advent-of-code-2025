@@ -1,5 +1,6 @@
-export function rotate(start: number, rotation: string): number {
-  const direction = rotation.charAt(0) === "L" ? -1 : 1;
-  const clicks = parseInt(rotation.slice(1)) ?? 0;
-  return (100 + start + direction * clicks) % 100;
+import { parseRotation } from "./parse-rotation";
+
+export function rotate(position: number, rotation: string): number {
+  const { direction, clicks } = parseRotation(rotation);
+  return (100 + position + direction * clicks) % 100;
 }

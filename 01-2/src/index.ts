@@ -1,28 +1,33 @@
 import { createReadStream } from "node:fs";
 import path from "node:path";
 import { createInterface } from "node:readline";
-import { rotate } from "./rotate";
+import { processInputs } from "./process-inputs";
 
-const __dirname = path.resolve();
+function readInputs(callback: (error: any | null, inputs?: string[]) => void) {
+  const inputs: string[] = [];
+  const __dirname = path.resolve();
+  const inputStream = createReadStream(
+    path.join(__dirname, "src", "input.txt"),
+  );
+  const rl = createInterface({
+    input: inputStream,
+    crlfDelay: Infinity,
+  });
+  rl.on("line", (line) => {
+    inputs.push(line);
+  });
+  rl.on("close", () => {
+    callback(null, inputs);
+  });
+  rl.on("error", (err) => {
+    callback(err);
+  });
+}
 
-const inputStream = createReadStream(path.join(__dirname, "src", "input.txt"));
-
-const rl = createInterface({
-  input: inputStream,
-  crlfDelay: Infinity,
-});
-
-let position = 50;
-let zeroes = 0;
-
-rl.on("line", (line) => {
-  const newPosition = rotate(position, line);
-  if (newPosition === 0) {
-    zeroes += 1;
+readInputs((err, inputs = []) => {
+  if (err) {
+    throw new Error(err);
   }
-  position = newPosition;
-});
-
-rl.on("close", () => {
-  console.log("zeroes:", zeroes);
+  const password = processInputs(inputs);
+  console.log("password:", password);
 });
