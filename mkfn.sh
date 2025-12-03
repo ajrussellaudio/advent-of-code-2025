@@ -33,6 +33,6 @@ EOF
 INDEX_FILE="$FN_PATH/index.ts"
 echo "Creating $INDEX_FILE"
 cat > "$INDEX_FILE" <<- EOF
-export { $NAME_SNAKE } from "./$NAME"
+export { $NAME_SNAKE } from "./$NAME";
 EOF
 
