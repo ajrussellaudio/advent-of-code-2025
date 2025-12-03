@@ -8,6 +8,6 @@ describe("processInputs", () => {
       "234234234234278",
       "818181911112111",
     ];
-    expect(processInputs(exampleInputs)).toBe(357);
+    expect(processInputs(exampleInputs)).toBe(3121910778619);
   });
 });
