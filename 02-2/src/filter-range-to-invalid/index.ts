@@ -1,1 +1,1 @@
-export { filterRangeToInvalid } from "./filter-range-to-invalid"
+export { filterRangeToInvalid } from "./filter-range-to-invalid";

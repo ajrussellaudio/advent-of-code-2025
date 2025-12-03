@@ -1,1 +1,1 @@
-export { parseBank } from "./parse-bank"
+export { parseBank } from "./parse-bank";

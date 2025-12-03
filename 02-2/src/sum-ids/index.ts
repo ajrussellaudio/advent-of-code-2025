@@ -1,1 +1,1 @@
-export { sumIds } from "./sum-ids"
+export { sumIds } from "./sum-ids";

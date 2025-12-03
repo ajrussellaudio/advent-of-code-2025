@@ -1,1 +1,1 @@
-export { generateRange } from "./generate-range"
+export { generateRange } from "./generate-range";
