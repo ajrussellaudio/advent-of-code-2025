@@ -10,7 +10,7 @@ cd $PROJECT_PATH
 
 mkdir src
 pnpm init
-pnpm add -D typescript
+pnpm add -D typescript @types/node
 cat > tsconfig.json <<- EOF
 {
   "\$schema": "https://www.schemastore.org/tsconfig",
@@ -44,4 +44,5 @@ EOF
 jq <<< $(jq '.scripts.test = "vitest"' package.json) > package.json
 echo "console.log('Hiya');" >> src/index.ts
 
-
+pnpm add -D tsx
+jq <<< $(jq '.scripts.start = "tsx ./src/index.ts"' package.json) > package.json
