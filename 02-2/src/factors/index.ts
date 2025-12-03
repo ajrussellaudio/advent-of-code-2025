@@ -1,1 +1,1 @@
-export { factors } from "./factors"
+export { factors } from "./factors";

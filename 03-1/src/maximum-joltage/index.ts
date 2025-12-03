@@ -1,1 +1,1 @@
-export { maximumJoltage } from "./maximum-joltage"
+export { maximumJoltage } from "./maximum-joltage";

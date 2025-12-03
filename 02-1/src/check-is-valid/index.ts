@@ -1,1 +1,1 @@
-export { checkIsValid } from "./check-is-valid"
+export { checkIsValid } from "./check-is-valid";

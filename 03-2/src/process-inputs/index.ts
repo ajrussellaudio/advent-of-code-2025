@@ -1,1 +1,1 @@
-export { processInputs } from "./process-inputs"
+export { processInputs } from "./process-inputs";
