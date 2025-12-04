@@ -68,8 +68,4 @@ export class Grid {
     }
     return subgrid;
   }
-
-  private debug() {
-    console.dir(this.grid);
-  }
 }
