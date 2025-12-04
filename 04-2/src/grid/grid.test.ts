@@ -115,9 +115,10 @@ describe("Grid", () => {
       grid = new Grid(rawGrid);
     });
 
-    it("removes all accessible rolls", () => {
-      grid.remove();
-      expect(grid.print()).toEqual("...\n..@\n.@.");
+    it("removes all accessible rolls, returning a copy", () => {
+      const removed = grid.remove();
+      expect(removed.print()).toEqual("...\n..@\n.@.");
+      expect(grid.print()).toBe(".@@\n@.@\n@@@");
     });
   });
 });

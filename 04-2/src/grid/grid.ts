@@ -1,11 +1,15 @@
 export class Grid {
-  private grid: string[][];
+  private readonly grid: string[][];
 
-  constructor(rawGrid: string) {
-    this.grid = rawGrid
-      .trim()
-      .split("\n")
-      .map((row) => row.trim().split(""));
+  constructor(grid: string | string[][]) {
+    if (Array.isArray(grid)) {
+      this.grid = grid;
+    } else {
+      this.grid = grid
+        .trim()
+        .split("\n")
+        .map((row) => row.trim().split(""));
+    }
   }
 
   print() {
@@ -46,11 +50,12 @@ export class Grid {
 
   remove() {
     const prevGrid = new Grid(this.print());
-    this.grid = this.grid.map((row, y) => {
+    const removed = this.grid.map((row, y) => {
       return row.map((square, x) =>
         prevGrid.checkSquareIsAccessible(x, y) ? "." : square,
       );
     });
+    return new Grid(removed);
   }
 
   private emptyRow() {
