@@ -8,6 +8,7 @@ PROJECT_PATH=$1
 shift
 
 AS_PACKAGE=false
+COPY_TARGET=""
 
 while [ $# -gt 0 ]; do
   case $1 in
@@ -33,7 +34,7 @@ if $AS_PACKAGE; then
   yq -i ".packages += \"$PROJECT_PATH\"" pnpm-workspace.yaml
 fi
 
-if [ -n $COPY_TARGET ]; then
+if [ -n "$COPY_TARGET" ]; then
   echo "Copying from: $COPY_TARGET"
   cp -r $COPY_TARGET $PROJECT_PATH
   cd $PROJECT_PATH
