@@ -49,7 +49,7 @@ export class Grid {
   }
 
   remove() {
-    const prevGrid = new Grid(this.print());
+    const prevGrid = new Grid(this.grid.map((row) => [...row]));
     const removed = this.grid.map((row, y) => {
       return row.map((square, x) =>
         prevGrid.checkSquareIsAccessible(x, y) ? "." : square,
