@@ -83,27 +83,7 @@ describe("Grid", () => {
     });
   });
 
-  describe("toString", () => {
-    let grid: Grid;
-
-    beforeEach(() => {
-      const rawGrid = `
-      .@@
-      @.@
-      @@@
-      `;
-      grid = new Grid(rawGrid);
-    });
-
-    it("prints the grid as a string to input to a new grid", () => {
-      const output = grid.print();
-      expect(output).toBe(".@@\n@.@\n@@@");
-      const newGrid = new Grid(output);
-      expect(newGrid.print()).toBe(output);
-    });
-  });
-
-  describe("removeAccessible", () => {
+  describe("remove", () => {
     let grid: Grid;
 
     beforeEach(() => {
@@ -117,8 +97,8 @@ describe("Grid", () => {
 
     it("removes all accessible rolls, returning a copy", () => {
       const removed = grid.remove();
-      expect(removed.print()).toEqual("...\n..@\n.@.");
-      expect(grid.print()).toBe(".@@\n@.@\n@@@");
+      expect(removed.totalIsAccessible()).toEqual(2);
+      expect(grid.totalIsAccessible()).toBe(5);
     });
   });
 });

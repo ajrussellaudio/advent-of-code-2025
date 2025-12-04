@@ -12,10 +12,6 @@ export class Grid {
     }
   }
 
-  print() {
-    return this.grid.map((row) => row.join("")).join("\n");
-  }
-
   getSquare(x: number, y: number) {
     return (this.grid[y] || this.emptyRow())[x] ?? ".";
   }
