@@ -82,4 +82,24 @@ describe("Grid", () => {
       expect(grid.totalIsAccessible()).toBe(5);
     });
   });
+
+  describe("toString", () => {
+    let grid: Grid;
+
+    beforeEach(() => {
+      const rawGrid = `
+      .@@
+      @.@
+      @@@
+      `;
+      grid = new Grid(rawGrid);
+    });
+
+    it("prints the grid as a string to input to a new grid", () => {
+      const output = grid.print();
+      expect(output).toBe(".@@\n@.@\n@@@");
+      const newGrid = new Grid(output);
+      expect(newGrid.print()).toBe(output);
+    });
+  });
 });
