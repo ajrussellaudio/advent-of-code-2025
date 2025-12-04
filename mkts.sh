@@ -36,7 +36,9 @@ if [ -d "$PROJECT_PATH" ]; then
 fi
 
 if $AS_PACKAGE; then
-  yq -i ".packages += \"$PROJECT_PATH\" | .packages |= unique" pnpm-workspace.yaml
+  yq -i \
+    ".packages += \"$PROJECT_PATH\" | .packages |= unique | .packages |= sort" \
+    pnpm-workspace.yaml
 fi
 
 if [ -n "$COPY_TARGET" ]; then
