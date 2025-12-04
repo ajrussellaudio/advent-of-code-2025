@@ -43,14 +43,14 @@ fi
 
 if [ -n "$COPY_TARGET" ]; then
   echo "Copying from: $COPY_TARGET"
-  cp -r $COPY_TARGET $PROJECT_PATH
-  cd $PROJECT_PATH
+  cp -r "$COPY_TARGET" "$PROJECT_PATH"
+  cd "$PROJECT_PATH"
   jq <<<$(jq ".name = \"$PROJECT_PATH\"" package.json) >package.json
   pnpm install
 else
 
-  mkdir $PROJECT_PATH
-  cd $PROJECT_PATH
+  mkdir "$PROJECT_PATH"
+  cd "$PROJECT_PATH"
 
   mkdir src
   pnpm init
