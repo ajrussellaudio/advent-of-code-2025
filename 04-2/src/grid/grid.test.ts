@@ -102,4 +102,22 @@ describe("Grid", () => {
       expect(newGrid.print()).toBe(output);
     });
   });
+
+  describe("removeAccessible", () => {
+    let grid: Grid;
+
+    beforeEach(() => {
+      const rawGrid = `
+      .@@
+      @.@
+      @@@
+      `;
+      grid = new Grid(rawGrid);
+    });
+
+    it("removes all accessible rolls", () => {
+      grid.remove();
+      expect(grid.print()).toEqual("...\n..@\n.@.");
+    });
+  });
 });

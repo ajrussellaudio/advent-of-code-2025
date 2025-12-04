@@ -1,5 +1,5 @@
 export class Grid {
-  private readonly grid: string[][];
+  private grid: string[][];
 
   constructor(rawGrid: string) {
     this.grid = rawGrid
@@ -42,6 +42,15 @@ export class Grid {
         }, 0)
       );
     }, 0);
+  }
+
+  remove() {
+    const prevGrid = new Grid(this.print());
+    this.grid = this.grid.map((row, y) => {
+      return row.map((square, x) =>
+        prevGrid.checkSquareIsAccessible(x, y) ? "." : square,
+      );
+    });
   }
 
   private emptyRow() {
