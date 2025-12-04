@@ -30,8 +30,13 @@ while [ $# -gt 0 ]; do
   shift
 done
 
+if [ -d "$PROJECT_PATH" ]; then
+  echo "Project $PROJECT_PATH already exists!"
+  exit 1
+fi
+
 if $AS_PACKAGE; then
-  yq -i ".packages += \"$PROJECT_PATH\"" pnpm-workspace.yaml
+  yq -i ".packages += \"$PROJECT_PATH\" | .packages |= unique" pnpm-workspace.yaml
 fi
 
 if [ -n "$COPY_TARGET" ]; then
