@@ -13,6 +13,9 @@ export class Grid {
   }
 
   checkSquareIsAccessible(x: number, y: number) {
+    if (this.getSquare(x, y) === ".") {
+      return false;
+    }
     const subgrid = this.squareWithNeighbours(x, y);
     const filledNeighbours = subgrid.reduce((prevRowTotal, row, _y) => {
       const rowTotal = row.reduce((rowTotal, square, _x) => {
@@ -24,6 +27,17 @@ export class Grid {
       return prevRowTotal + rowTotal;
     }, 0);
     return filledNeighbours < 4;
+  }
+
+  totalIsAccessible() {
+    return this.grid.reduce((total, row, y) => {
+      return (
+        total +
+        row.reduce((rowTotal, _square, x) => {
+          return rowTotal + (this.checkSquareIsAccessible(x, y) ? 1 : 0);
+        }, 0)
+      );
+    }, 0);
   }
 
   private emptyRow() {

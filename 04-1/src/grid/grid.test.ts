@@ -11,12 +11,16 @@ describe("Grid", () => {
   });
 
   describe("getSquare", () => {
-    const rawGrid = `
+    let grid: Grid;
+
+    beforeEach(() => {
+      const rawGrid = `
       ..@
       .@.
       @@.
       `;
-    const grid = new Grid(rawGrid);
+      grid = new Grid(rawGrid);
+    });
 
     it.each`
       x    | y    | square
@@ -35,16 +39,20 @@ describe("Grid", () => {
   });
 
   describe("checkSquareIsAccessible", () => {
-    const rawGrid = `
-      ..@
+    let grid: Grid;
+
+    beforeEach(() => {
+      const rawGrid = `
       .@@
+      @.@
       @@@
       `;
-    const grid = new Grid(rawGrid);
+      grid = new Grid(rawGrid);
+    });
 
     it.each`
       x    | y    | isAccessible
-      ${0} | ${0} | ${true}
+      ${0} | ${0} | ${false}
       ${1} | ${0} | ${true}
       ${2} | ${0} | ${true}
       ${0} | ${1} | ${true}
@@ -55,6 +63,23 @@ describe("Grid", () => {
       ${2} | ${2} | ${true}
     `("square ($x, $y) returns $isAccessible", ({ x, y, isAccessible }) => {
       expect(grid.checkSquareIsAccessible(x, y)).toBe(isAccessible);
+    });
+  });
+
+  describe("totalIsAccessible", () => {
+    let grid: Grid;
+
+    beforeEach(() => {
+      const rawGrid = `
+      .@@
+      @.@
+      @@@
+      `;
+      grid = new Grid(rawGrid);
+    });
+
+    it("returns the total number of accessible squares", () => {
+      expect(grid.totalIsAccessible()).toBe(5);
     });
   });
 });
