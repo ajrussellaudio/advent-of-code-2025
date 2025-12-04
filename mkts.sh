@@ -45,7 +45,8 @@ if [ -n "$COPY_TARGET" ]; then
   echo "Copying from: $COPY_TARGET"
   cp -r "$COPY_TARGET" "$PROJECT_PATH"
   cd "$PROJECT_PATH"
-  jq <<<$(jq ".name = \"$PROJECT_PATH\"" package.json) >package.json
+  jq ".name = \"$PROJECT_PATH\"" package.json >package.json.tmp &&
+    mv package.json.tmp package.json
   pnpm install
 else
 
@@ -86,9 +87,11 @@ export default defineConfig({
   },
 })
 EOF
-  jq <<<$(jq '.scripts.test = "vitest"' package.json) >package.json
+  jq '.scripts.test = "vitest"' package.json >package.json.tmp &&
+    mv package.json.tmp package.json
   echo "console.log('Hiya');" >>src/index.ts
 
   pnpm add -D tsx
-  jq <<<$(jq '.scripts.start = "tsx ./src/index.ts"' package.json) >package.json
+  jq '.scripts.start = "tsx ./src/index.ts"' package.json >package.json.tmp &&
+    mv package.json.tmp package.json
 fi
