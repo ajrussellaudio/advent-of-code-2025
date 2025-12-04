@@ -5,13 +5,38 @@ set -o pipefail
 
 PROJECT_PATH=$1
 
+shift
+
+AS_PACKAGE=false
+
+while [ $# -gt 0 ]; do
+  case $1 in
+  -p | --package)
+    AS_PACKAGE=true
+    ;;
+  --no-package)
+    AS_PACKAGE=false
+    ;;
+  *)
+    echo "Invalid option: $1" >&2
+    exit 1
+    ;;
+  esac
+  shift
+done
+
+if $AS_PACKAGE; then
+  yq -i ".packages += \"$PROJECT_PATH\"" pnpm-workspace.yaml
+fi
+
 mkdir $PROJECT_PATH
 cd $PROJECT_PATH
 
 mkdir src
 pnpm init
+
 pnpm add -D typescript @types/node
-cat > tsconfig.json <<- EOF
+cat >tsconfig.json <<-EOF
 {
   "\$schema": "https://www.schemastore.org/tsconfig",
   "_version": "22.0.0",
@@ -31,7 +56,7 @@ cat > tsconfig.json <<- EOF
 }
 EOF
 pnpm add -D vitest
-cat > vitest.config.ts <<- EOF
+cat >vitest.config.ts <<-EOF
 import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
@@ -41,8 +66,8 @@ export default defineConfig({
   },
 })
 EOF
-jq <<< $(jq '.scripts.test = "vitest"' package.json) > package.json
-echo "console.log('Hiya');" >> src/index.ts
+jq <<<$(jq '.scripts.test = "vitest"' package.json) >package.json
+echo "console.log('Hiya');" >>src/index.ts
 
 pnpm add -D tsx
-jq <<< $(jq '.scripts.start = "tsx ./src/index.ts"' package.json) > package.json
+jq <<<$(jq '.scripts.start = "tsx ./src/index.ts"' package.json) >package.json
