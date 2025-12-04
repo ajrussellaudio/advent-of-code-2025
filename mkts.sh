@@ -5,13 +5,59 @@ set -o pipefail
 
 PROJECT_PATH=$1
 
-mkdir $PROJECT_PATH
-cd $PROJECT_PATH
+shift
 
-mkdir src
-pnpm init
-pnpm add -D typescript @types/node
-cat > tsconfig.json <<- EOF
+AS_PACKAGE=false
+COPY_TARGET=""
+
+while [ $# -gt 0 ]; do
+  case $1 in
+  -p | --package)
+    AS_PACKAGE=true
+    ;;
+  --no-package)
+    AS_PACKAGE=false
+    ;;
+  --cp)
+    COPY_TARGET=$2
+    shift
+    ;;
+  *)
+    echo "Invalid option: $1" >&2
+    exit 1
+    ;;
+  esac
+  shift
+done
+
+if [ -d "$PROJECT_PATH" ]; then
+  echo "Project $PROJECT_PATH already exists!"
+  exit 1
+fi
+
+if $AS_PACKAGE; then
+  yq -i \
+    ".packages += \"$PROJECT_PATH\" | .packages |= unique | .packages |= sort" \
+    pnpm-workspace.yaml
+fi
+
+if [ -n "$COPY_TARGET" ]; then
+  echo "Copying from: $COPY_TARGET"
+  cp -r "$COPY_TARGET" "$PROJECT_PATH"
+  cd "$PROJECT_PATH"
+  jq ".name = \"$PROJECT_PATH\"" package.json >package.json.tmp &&
+    mv package.json.tmp package.json
+  pnpm install
+else
+
+  mkdir "$PROJECT_PATH"
+  cd "$PROJECT_PATH"
+
+  mkdir src
+  pnpm init
+
+  pnpm add -D typescript @types/node
+  cat >tsconfig.json <<-EOF
 {
   "\$schema": "https://www.schemastore.org/tsconfig",
   "_version": "22.0.0",
@@ -30,8 +76,8 @@ cat > tsconfig.json <<- EOF
   }
 }
 EOF
-pnpm add -D vitest
-cat > vitest.config.ts <<- EOF
+  pnpm add -D vitest
+  cat >vitest.config.ts <<-EOF
 import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
@@ -41,8 +87,11 @@ export default defineConfig({
   },
 })
 EOF
-jq <<< $(jq '.scripts.test = "vitest"' package.json) > package.json
-echo "console.log('Hiya');" >> src/index.ts
+  jq '.scripts.test = "vitest"' package.json >package.json.tmp &&
+    mv package.json.tmp package.json
+  echo "console.log('Hiya');" >>src/index.ts
 
-pnpm add -D tsx
-jq <<< $(jq '.scripts.start = "tsx ./src/index.ts"' package.json) > package.json
+  pnpm add -D tsx
+  jq '.scripts.start = "tsx ./src/index.ts"' package.json >package.json.tmp &&
+    mv package.json.tmp package.json
+fi
