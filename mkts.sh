@@ -17,6 +17,10 @@ while [ $# -gt 0 ]; do
   --no-package)
     AS_PACKAGE=false
     ;;
+  --cp)
+    COPY_TARGET=$2
+    shift
+    ;;
   *)
     echo "Invalid option: $1" >&2
     exit 1
@@ -29,14 +33,22 @@ if $AS_PACKAGE; then
   yq -i ".packages += \"$PROJECT_PATH\"" pnpm-workspace.yaml
 fi
 
-mkdir $PROJECT_PATH
-cd $PROJECT_PATH
+if [ -n $COPY_TARGET ]; then
+  echo "Copying from: $COPY_TARGET"
+  cp -r $COPY_TARGET $PROJECT_PATH
+  cd $PROJECT_PATH
+  jq <<<$(jq ".name = \"$PROJECT_PATH\"" package.json) >package.json
+  pnpm install
+else
 
-mkdir src
-pnpm init
+  mkdir $PROJECT_PATH
+  cd $PROJECT_PATH
 
-pnpm add -D typescript @types/node
-cat >tsconfig.json <<-EOF
+  mkdir src
+  pnpm init
+
+  pnpm add -D typescript @types/node
+  cat >tsconfig.json <<-EOF
 {
   "\$schema": "https://www.schemastore.org/tsconfig",
   "_version": "22.0.0",
@@ -55,8 +67,8 @@ cat >tsconfig.json <<-EOF
   }
 }
 EOF
-pnpm add -D vitest
-cat >vitest.config.ts <<-EOF
+  pnpm add -D vitest
+  cat >vitest.config.ts <<-EOF
 import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
@@ -66,8 +78,9 @@ export default defineConfig({
   },
 })
 EOF
-jq <<<$(jq '.scripts.test = "vitest"' package.json) >package.json
-echo "console.log('Hiya');" >>src/index.ts
+  jq <<<$(jq '.scripts.test = "vitest"' package.json) >package.json
+  echo "console.log('Hiya');" >>src/index.ts
 
-pnpm add -D tsx
-jq <<<$(jq '.scripts.start = "tsx ./src/index.ts"' package.json) >package.json
+  pnpm add -D tsx
+  jq <<<$(jq '.scripts.start = "tsx ./src/index.ts"' package.json) >package.json
+fi
