@@ -4,27 +4,18 @@ set -u
 set -o pipefail
 
 FN_PATH=$1 || "."
+shift
 NAME=$(basename $FN_PATH)
 NAME_SNAKE=$(echo $NAME | perl -pe 's/(-)./uc($&)/ge;s/-//g')
 
-shift
-
 WITH_TEST=false
 
-while [ $# -gt 0 ]; do
-  case $1 in
-  -t | --test)
-    WITH_TEST=true
-    ;;
-  --no-test)
-    WITH_TEST=false
-    ;;
-  *)
-    echo "Invalid option: $1" >&2
-    exit 1
-    ;;
-  esac
-  shift
+while [ $OPTIND -le "$#" ]; do
+  if getopts t option; then
+    case $option in
+    t) WITH_TEST=true ;;
+    esac
+  fi
 done
 
 echo "Creating $FN_PATH"
