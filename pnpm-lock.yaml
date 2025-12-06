@@ -181,6 +181,10 @@ importers:
         version: 4.0.15(@types/node@24.10.1)(tsx@4.21.0)
 
   06-1:
+    dependencies:
+      utils:
+        specifier: workspace:*
+        version: link:../utils
     devDependencies:
       '@types/node':
         specifier: ^24.10.1
