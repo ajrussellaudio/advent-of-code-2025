@@ -1,14 +1,8 @@
 import { doMaths } from "../do-maths";
-import { Operator } from "../types/operator";
+import { ParsedInput } from "../parse-input/parse-input";
 
-export function doAllTheMaths({
-  operators,
-  operands,
-}: {
-  operators: Operator[];
-  operands: number[][];
-}) {
-  return operators.reduce((sum, operator, i) => {
-    return sum + doMaths(operator, ...operands.map((list) => list[i]));
+export function doAllTheMaths(problems: ParsedInput) {
+  return problems.reduce((sum, problem) => {
+    return sum + doMaths(...problem);
   }, 0);
 }
