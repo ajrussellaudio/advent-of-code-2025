@@ -1,4 +1,4 @@
-import { Operator } from "../types/operator";
+import { isOperator, Operator } from "../types/operator";
 
 export type ParsedInput = Array<[Operator, ...number[]]>;
 
@@ -11,9 +11,7 @@ export function parseInput(input: string): ParsedInput {
     const column = lines.map((line) => line[col_n - 1] ?? " ");
     const columnIsEmpty = column.every((field) => field === " ");
     if (columnIsEmpty) {
-      const operator: Operator | undefined = tmp.find(
-        (char) => char === "+" || char === "*",
-      );
+      const operator = tmp.find(isOperator);
       if (operator) {
         tmp = tmp.filter((char) => char !== operator);
       } else {
