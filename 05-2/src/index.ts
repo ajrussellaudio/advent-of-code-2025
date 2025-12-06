@@ -1,12 +1,10 @@
 import path from "node:path";
 import { readInput } from "utils";
-import { countFresh } from "./count-fresh";
+import { countAllFreshIds } from "./count-all-fresh-ids";
 
 const inputPath = path.join(__dirname, "input.txt");
 readInput(inputPath, (data) => {
-  const [ranges, ingredients] = data
-    .split("\n\n")
-    .map((chunk) => chunk.split("\n"));
-  const freshCount = countFresh(ingredients, ranges);
-  console.log("freshCount:", freshCount);
+  const [ranges] = data.split("\n\n").map((chunk) => chunk.split("\n"));
+  const freshIdTotal = countAllFreshIds(ranges);
+  console.log("freshIdTotal:", freshIdTotal);
 });
