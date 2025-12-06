@@ -94,4 +94,6 @@ EOF
   pnpm add -D tsx
   jq '.scripts.start = "tsx ./src/index.ts"' package.json >package.json.tmp &&
     mv package.json.tmp package.json
+
+  pnpm add "utils@workspace:*"
 fi
