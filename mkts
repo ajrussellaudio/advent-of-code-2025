@@ -4,30 +4,23 @@ set -u
 set -o pipefail
 
 PROJECT_PATH=$1
-
 shift
+
+dependencies=("utils@workspace:*")
+devDependencies=("@types/node" "tsx" "typescript" "vitest")
 
 AS_PACKAGE=false
 COPY_TARGET=""
 
-while [ $# -gt 0 ]; do
-  case $1 in
-  -p | --package)
-    AS_PACKAGE=true
-    ;;
-  --no-package)
-    AS_PACKAGE=false
-    ;;
-  --cp)
-    COPY_TARGET=$2
-    shift
-    ;;
-  *)
-    echo "Invalid option: $1" >&2
-    exit 1
-    ;;
-  esac
-  shift
+while [ $OPTIND -le "$#" ]; do
+  if getopts pc:d:D: option; then
+    case $option in
+    p) AS_PACKAGE=true ;;
+    c) COPY_TARGET="$OPTARG" ;;
+    d) dependencies+=("$OPTARG") ;;
+    D) devDependencies+=("$OPTARG") ;;
+    esac
+  fi
 done
 
 if [ -d "$PROJECT_PATH" ]; then
@@ -49,14 +42,12 @@ if [ -n "$COPY_TARGET" ]; then
     mv package.json.tmp package.json
   pnpm install
 else
-
   mkdir "$PROJECT_PATH"
   cd "$PROJECT_PATH"
 
   mkdir src
   pnpm init
 
-  pnpm add -D typescript @types/node
   cat >tsconfig.json <<-EOF
 {
   "\$schema": "https://json.schemastore.org/tsconfig",
@@ -76,7 +67,6 @@ else
   }
 }
 EOF
-  pnpm add -D vitest
   cat >vitest.config.ts <<-EOF
 import { defineConfig } from 'vitest/config'
 
@@ -91,9 +81,9 @@ EOF
     mv package.json.tmp package.json
   echo "console.log('Hiya');" >>src/index.ts
 
-  pnpm add -D tsx
   jq '.scripts.start = "tsx ./src/index.ts"' package.json >package.json.tmp &&
     mv package.json.tmp package.json
-
-  pnpm add "utils@workspace:*"
 fi
+
+pnpm add --reporter=append-only -D ${devDependencies[@]}
+pnpm add --reporter=append-only ${dependencies[@]}
