@@ -18,7 +18,7 @@ class RangeSet {
 
   private _mergeIntersecting() {
     let didChange = false;
-    this.set.map((range, i, self) => {
+    this.set.forEach((range, i, self) => {
       self.forEach((rangeInSet) => {
         if (this._isIntersecting(range, rangeInSet)) {
           this.set[i] = {
