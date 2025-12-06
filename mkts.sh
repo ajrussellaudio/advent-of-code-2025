@@ -59,7 +59,7 @@ else
   pnpm add -D typescript @types/node
   cat >tsconfig.json <<-EOF
 {
-  "\$schema": "https://www.schemastore.org/tsconfig",
+  "\$schema": "https://json.schemastore.org/tsconfig",
   "_version": "22.0.0",
 
   "compilerOptions": {
