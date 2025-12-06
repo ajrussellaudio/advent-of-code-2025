@@ -1,3 +1,5 @@
+import { isOperator, Operator } from "../types/operator";
+
 export function parseInput(input: string) {
   const [operatorsList, ...operandsLists] = input
     .trim()
@@ -9,6 +11,9 @@ export function parseInput(input: string) {
       .split(/\s+/)
       .map((operand) => parseInt(operand)),
   );
-  const operators = operatorsList.trim().split(/\s+/);
+  const operators: Operator[] = operatorsList
+    .trim()
+    .split(/\s+/)
+    .filter(isOperator);
   return { operands, operators };
 }
