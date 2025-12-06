@@ -1,19 +1,36 @@
-import { isOperator, Operator } from "../types/operator";
+import { Operator } from "../types/operator";
 
-export function parseInput(input: string) {
-  const [operatorsList, ...operandsLists] = input
-    .trim()
-    .split("\n")
-    .toReversed();
-  const operands = operandsLists.toReversed().map((list) =>
-    list
-      .trim()
-      .split(/\s+/)
-      .map((operand) => parseInt(operand)),
-  );
-  const operators: Operator[] = operatorsList
-    .trim()
-    .split(/\s+/)
-    .filter(isOperator);
-  return { operands, operators };
+export type ParsedInput = Array<[Operator, ...number[]]>;
+
+export function parseInput(input: string): ParsedInput {
+  const lines = input.trim().split("\n");
+  const longest = Math.max(...lines.map((line) => line.length));
+  const output: Array<[Operator, ...number[]]> = [];
+  let tmp: string[] = [];
+  for (let col_n = longest; col_n >= 0; col_n--) {
+    const column = lines.map((line) => line[col_n - 1] ?? " ");
+    const columnIsEmpty = column.every((field) => field === " ");
+    if (columnIsEmpty) {
+      const operator: Operator | undefined = tmp.find(
+        (char) => char === "+" || char === "*",
+      );
+      if (operator) {
+        tmp = tmp.filter((char) => char !== operator);
+      } else {
+        throw new Error("operator not found");
+      }
+      output.push([
+        operator,
+        ...tmp
+          .join("")
+          .trim()
+          .split(/\s+/)
+          .map((n) => parseInt(n)),
+      ]);
+      tmp = [];
+    } else {
+      tmp = tmp.concat(column);
+    }
+  }
+  return output;
 }
