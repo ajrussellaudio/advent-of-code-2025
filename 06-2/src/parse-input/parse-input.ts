@@ -7,8 +7,8 @@ export function parseInput(input: string): ParsedInput {
   const longest = Math.max(...lines.map((line) => line.length));
   const output: Array<[Operator, ...number[]]> = [];
   let tmp: string[] = [];
-  for (let col_n = longest; col_n >= 0; col_n--) {
-    const column = lines.map((line) => line[col_n - 1] ?? " ");
+  for (let columnIndex = longest; columnIndex >= 0; columnIndex--) {
+    const column = lines.map((line) => line[columnIndex - 1] ?? " ");
     const columnIsEmpty = column.every((field) => field === " ");
     if (columnIsEmpty) {
       const operator = tmp.find(isOperator);
