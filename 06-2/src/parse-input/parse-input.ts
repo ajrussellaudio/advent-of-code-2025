@@ -15,7 +15,9 @@ export function parseInput(input: string): ParsedInput {
       if (operator) {
         tmp = tmp.filter((char) => char !== operator);
       } else {
-        throw new Error("operator not found");
+        throw new Error(
+          `operator not found at column ${columnIndex}. tmp: ${tmp.join(",")}`,
+        );
       }
       output.push([
         operator,
