@@ -1,1 +1,1 @@
-export { tachyonManifold } from "./tachyon-manifold";
+export { TachyonManifold } from "./tachyon-manifold";
