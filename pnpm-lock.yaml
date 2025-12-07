@@ -218,6 +218,44 @@ importers:
         specifier: ^4.0.15
         version: 4.0.15(@types/node@24.10.1)(tsx@4.21.0)
 
+  07-1:
+    dependencies:
+      utils:
+        specifier: workspace:*
+        version: link:../utils
+    devDependencies:
+      '@types/node':
+        specifier: ^24.10.1
+        version: 24.10.1
+      tsx:
+        specifier: ^4.21.0
+        version: 4.21.0
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+      vitest:
+        specifier: ^4.0.15
+        version: 4.0.15(@types/node@24.10.1)(tsx@4.21.0)
+
+  07-2:
+    dependencies:
+      utils:
+        specifier: workspace:*
+        version: link:../utils
+    devDependencies:
+      '@types/node':
+        specifier: ^24.10.1
+        version: 24.10.1
+      tsx:
+        specifier: ^4.21.0
+        version: 4.21.0
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+      vitest:
+        specifier: ^4.0.15
+        version: 4.0.15(@types/node@24.10.1)(tsx@4.21.0)
+
   utils:
     devDependencies:
       '@types/node':
