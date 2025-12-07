@@ -1,19 +1,6 @@
-import { TachyonManifold } from "./tachyon-manifold";
+import { tachyonManifold } from "./tachyon-manifold";
 
 describe("tachyonManifold", () => {
-  it("can be initialised", () => {
-    const input = `
-    ..S..
-    .....
-    ..^..
-    .....
-    .^.^.
-    .....
-    `;
-    const manifold = new TachyonManifold(input);
-    expect(manifold).not.toBeNull();
-  });
-
   it("counts the times the beam is split", () => {
     const input = `
     ..S..
@@ -23,8 +10,8 @@ describe("tachyonManifold", () => {
     .^.^.
     .....
     `;
-    const manifold = new TachyonManifold(input);
-    expect(manifold.splits).toBe(3);
+    const { splits } = tachyonManifold(input);
+    expect(splits).toBe(3);
   });
 
   it("counts the times the beam is split - example", () => {
@@ -45,8 +32,8 @@ describe("tachyonManifold", () => {
     ...............
     .^.^.^.^.^...^.
     ...............`;
-    const manifold = new TachyonManifold(input);
-    expect(manifold.splits).toBe(21);
+    const { splits } = tachyonManifold(input);
+    expect(splits).toBe(21);
   });
 
   it("counts the possible pathways a quantum tachyon can take - example", () => {
@@ -67,8 +54,8 @@ describe("tachyonManifold", () => {
     ...............
     .^.^.^.^.^...^.
     ...............`;
-    const manifold = new TachyonManifold(input);
-    expect(manifold.pathways).toBe(40);
+    const { pathways } = tachyonManifold(input);
+    expect(pathways).toBe(40);
   });
 
   it("counts the possible pathways a quantum tachyon can take", () => {
@@ -83,13 +70,7 @@ describe("tachyonManifold", () => {
     ...............
     ....^.^...^....
     ...............`;
-    const manifold = new TachyonManifold(input);
-    expect(manifold.pathways).toBe(13);
+    const { pathways } = tachyonManifold(input);
+    expect(pathways).toBe(13);
   });
 });
-
-// 1
-// 1 1
-// 1 2 1
-// 1 3 3 1
-// 1 4 3 3 1 1
