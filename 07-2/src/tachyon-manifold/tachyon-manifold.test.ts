@@ -24,7 +24,7 @@ describe("tachyonManifold", () => {
     .....
     `;
     const manifold = new TachyonManifold(input);
-    expect(manifold.countSplits()).toBe(3);
+    expect(manifold.splits).toBe(3);
   });
 
   it("counts the times the beam is split - example", () => {
@@ -46,7 +46,7 @@ describe("tachyonManifold", () => {
     .^.^.^.^.^...^.
     ...............`;
     const manifold = new TachyonManifold(input);
-    expect(manifold.countSplits()).toBe(21);
+    expect(manifold.splits).toBe(21);
   });
 
   it("counts the possible pathways a quantum tachyon can take - example", () => {

@@ -8,7 +8,7 @@ function isValidCell(cell: string): cell is CellState {
 
 export class TachyonManifold {
   private readonly initialState: Manifold<CellState>;
-  private readonly fired: Manifold<FiredCellState>;
+  private readonly _splits: number;
   private readonly _pathways: number;
 
   constructor(input: string) {
@@ -16,30 +16,25 @@ export class TachyonManifold {
       .trim()
       .split("\n")
       .map((line) => line.trim().split("").filter(isValidCell));
-    const { fired, pathways } = this._fire();
-    this.fired = fired;
+    const { splits, pathways } = this._fire();
+    this._splits = splits;
     this._pathways = pathways;
+  }
+
+  public get splits(): number {
+    return this._splits;
   }
 
   public get pathways(): number {
     return this._pathways;
   }
 
-  countSplits() {
-    return this.fired.reduceRight((sum, row, rowIndex) => {
-      const rowTotal = row.reduce((rowSum, cell, cellIndex) => {
-        if (cell === "^" && this.fired[rowIndex - 1][cellIndex] === "|") {
-          return rowSum + 1;
-        }
-        return rowSum;
-      }, 0);
-      return sum + rowTotal;
-    }, 0);
-  }
-
   private _fire() {
-    const firing: Manifold<FiredCellState> = this._deepClone(this.initialState);
-    const cursor = this.initialState[0].map(() => 0);
+    const firing: Manifold<FiredCellState> = this.initialState.map((row) => [
+      ...row,
+    ]);
+    let splitsCount = 0;
+    const pathwaysCursor = this.initialState[0].map(() => 0);
     const start = firing[0].indexOf("S");
     if (start >= 0) {
       firing[1][start] = "|";
@@ -47,9 +42,10 @@ export class TachyonManifold {
     firing.slice(1).forEach((row, previousRowIndex) => {
       row.forEach((cell, cellIndex) => {
         if (cell === "^" && firing[previousRowIndex][cellIndex] === "|") {
-          cursor[cellIndex - 1] += cursor[cellIndex] || 1;
-          cursor[cellIndex + 1] += cursor[cellIndex] || 1;
-          cursor[cellIndex] = 0;
+          pathwaysCursor[cellIndex - 1] += pathwaysCursor[cellIndex] || 1;
+          pathwaysCursor[cellIndex + 1] += pathwaysCursor[cellIndex] || 1;
+          pathwaysCursor[cellIndex] = 0;
+          splitsCount += 1;
           row[cellIndex - 1] = "|";
           row[cellIndex + 1] = "|";
         }
@@ -57,15 +53,11 @@ export class TachyonManifold {
           row[cellIndex] = "|";
         }
       });
-      // console.log(JSON.stringify(cursor.filter((t) => t > 0)));
     });
     return {
       fired: firing,
-      pathways: cursor.reduce((sum, curr) => sum + curr),
+      splits: splitsCount,
+      pathways: pathwaysCursor.reduce((sum, curr) => sum + curr),
     };
-  }
-
-  private _deepClone(manifold: Manifold) {
-    return manifold.map((row) => [...row]);
   }
 }
